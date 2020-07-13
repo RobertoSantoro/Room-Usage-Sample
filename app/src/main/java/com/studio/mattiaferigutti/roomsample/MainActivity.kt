@@ -30,16 +30,17 @@ class MainActivity : AppCompatActivity() {
 
         addButton.setOnClickListener {
             val text = editTextTextPersonName.text.toString()
+            val element = Element(elementName = text)
             uiScope.launch {
-                insertValue(Element(elementName = text))
+                insertValue(element)
             }
+            adapter.addInList(element.elementName)
         }
     }
 
     private suspend fun insertValue(element: Element) {
         withContext(Dispatchers.IO) {
             database.elementDatabaseDao.insert(element)
-            adapter.addInList(element.elementName)
         }
     }
 
