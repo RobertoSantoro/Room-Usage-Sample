@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 //todo: if the name is the same the user has to change it
 
-class   Adapter(private val list: MutableList<String>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+class   Adapter(private val list: MutableList<Element?>?) : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
     class ViewHolder(item: View) : RecyclerView.ViewHolder(item) {
-        val text = item.findViewById<TextView>(R.id.textView)
+        val text: TextView = item.findViewById<TextView>(R.id.textView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,16 +21,16 @@ class   Adapter(private val list: MutableList<String>) : RecyclerView.Adapter<Ad
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return list?.size ?: 0
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentElement = list[position]
-        holder.text.text = currentElement
+        val currentElement = list?.get(position)
+        holder.text.text = currentElement?.elementName
     }
 
-    fun addInList(element: String) {
-        list.add(element)
+    fun addInList(element: Element) {
+        list?.add(element)
         notifyDataSetChanged()
     }
 }

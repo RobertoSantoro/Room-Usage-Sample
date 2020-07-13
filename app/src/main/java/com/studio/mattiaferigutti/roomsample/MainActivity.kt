@@ -11,12 +11,18 @@ class MainActivity : AppCompatActivity() {
     private val uiScope = CoroutineScope(Dispatchers.Main + myJob)
     private lateinit var database: ElementDatabase
     private lateinit var adapter: Adapter
+    private var list =  mutableListOf<Element?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val list = mutableListOf<String>("Marco", "Arianna", "Gino")
+        uiScope.launch {
+            val data = getAllData()?.toMutableList()!!
+            for (previous in data)
+                list.add(previous)
+            adapter.notifyDataSetChanged()
+        }
 
         adapter = Adapter(list)
         recycler.layoutManager = LinearLayoutManager(this)
@@ -24,17 +30,13 @@ class MainActivity : AppCompatActivity() {
 
         database = ElementDatabase.getInstance(this)
 
-        uiScope.launch {
-            getAllData()
-        }
-
         addButton.setOnClickListener {
             val text = editTextTextPersonName.text.toString()
             val element = Element(elementName = text)
             uiScope.launch {
                 insertValue(element)
             }
-            adapter.addInList(element.elementName)
+            adapter.addInList(element)
         }
     }
 
